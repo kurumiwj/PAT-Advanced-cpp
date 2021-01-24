@@ -1,35 +1,33 @@
 #include <iostream>
-#include <cstdio>
+#include <algorithm>
+#include <vector>
 using namespace std;
 
-struct currency{    //»õ±Ò£ºÊ®Æß¸öÒøÎ÷¿É(Sickle)¶ÒÒ»¸ö¼ÓÂ¡(Galleon)£¬¶şÊ®¾Å¸öÄÉÌØ(Knut)¶ÒÒ»¸öÎ÷¿É
-    int Galleon;
-    int Sickle;
-    int Knut;
-};
+bool cmp(int a,int b){
+	if(a>0&&b>0||a*b<0) return a>b;	//	è‹¥éƒ½ä¸ºæ­£æˆ–ä¸€æ­£ä¸€è´Ÿåˆ™ä»å¤§åˆ°å°æ’åº
+	else if(a<0&&b<0) return a<b;	//è‹¥éƒ½ä¸ºè´Ÿåˆ™ä»å°åˆ°å¤§æ’åº
+	else  return a>b;
+}
 int main(){
-    int charge,Galleon,Sickle,Knut;
-    currency p,a; //pÎªÓ¦¸¶µÄ¼ÛÇ®£¬aÎªÊµ¸¶µÄ¼ÛÇ®
-    scanf("%d.%d.%d",&p.Galleon,&p.Sickle,&p.Knut);
-    scanf("%d.%d.%d",&a.Galleon,&a.Sickle,&a.Knut);
-    int money_p=p.Knut+p.Sickle*29+p.Galleon*17*29,money_a=a.Knut+a.Sickle*29+a.Galleon*17*29;
-    if(money_a>=money_p){
-        charge=money_a-money_p;
-        Galleon=charge/(29*17);
-        charge%=(29*17);
-        Sickle=charge/29;
-        charge%=29;
-        Knut=charge;
-        printf("%d.%d.%d\n",Galleon,Sickle,Knut);
-    }else{
-        charge=money_p-money_a;
-        Galleon=charge/(29*17);
-        charge%=(29*17);
-        Sickle=charge/29;
-        charge%=29;
-        Knut=charge;
-        printf("-%d.%d.%d\n",Galleon,Sickle,Knut);
-    }
-    system("pause");
-    return 0;
+	int nc,np;
+	scanf("%d",&nc);
+	vector<int> v1(nc);
+	for(int i=0;i<nc;i++) scanf("%d",&v1[i]);
+	scanf("%d",&np);
+	vector<int> v2(np);
+	for(int i=0;i<np;i++) scanf("%d",&v2[i]);
+	sort(v1.begin(),v1.end(),cmp);
+	sort(v2.begin(),v2.end(),cmp);
+	long long total=0;
+	for(int i=0,j=0;i<nc&&j<np;){
+		if(v2[j]==0) j++;
+		else if(v1[i]==0) i++;
+		else if(v1[i]<0&&v2[j]<0) total+=v1[i++]*v2[j++];
+		else if(v1[i]<0&&v2[j]>0) j++;
+		else if(v1[i]>0&&v2[j]<0) i++;
+		else total+=v1[i++]*v2[j++];
+	}
+	printf("%lld",total);
+	system("pause");
+	return 0;
 }
